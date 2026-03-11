@@ -1,4 +1,3 @@
-// src/index.ts
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { calculateTool } from './tools/calculate.js';
@@ -11,24 +10,30 @@ const server = new McpServer({
 });
 
 // Register tools
-server.tool(
+server.registerTool(
   calculateTool.name,
-  calculateTool.description,
-  calculateTool.inputSchema.shape,
+  {
+    description: calculateTool.description,
+    inputSchema: calculateTool.inputSchema,
+  },
   async (args) => calculateTool.handler(args as { expression: string; precision?: number }),
 );
 
-server.tool(
+server.registerTool(
   convertTool.name,
-  convertTool.description,
-  convertTool.inputSchema.shape,
+  {
+    description: convertTool.description,
+    inputSchema: convertTool.inputSchema,
+  },
   async (args) => convertTool.handler(args as { value: number; from: string; to: string }),
 );
 
-server.tool(
+server.registerTool(
   statisticsTool.name,
-  statisticsTool.description,
-  statisticsTool.inputSchema.shape,
+  {
+    description: statisticsTool.description,
+    inputSchema: statisticsTool.inputSchema,
+  },
   async (args) =>
     statisticsTool.handler(args as { operation: string; data: number[]; percentile?: number }),
 );
