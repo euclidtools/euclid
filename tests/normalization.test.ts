@@ -58,6 +58,24 @@ describe('normalizeExpression', () => {
     expect(result.wasTransformed).toBe(true);
   });
 
+  it('does not strip comma-space patterns in function arguments', () => {
+    const result = normalizeExpression('max(100, 200)');
+    expect(result.value).toBe('max(100, 200)');
+    expect(result.wasTransformed).toBe(false);
+  });
+
+  it('handles numbers with many comma groups', () => {
+    const result = normalizeExpression('1,234,567,890');
+    expect(result.value).toBe('1234567890');
+    expect(result.wasTransformed).toBe(true);
+  });
+
+  it('handles mixed thousands commas and function arguments', () => {
+    const result = normalizeExpression('max(1,000, 2,000)');
+    expect(result.value).toBe('max(1000, 2000)');
+    expect(result.wasTransformed).toBe(true);
+  });
+
   it('returns wasTransformed false for clean expressions', () => {
     const result = normalizeExpression('2 * 3 + sqrt(16)');
     expect(result.value).toBe('2 * 3 + sqrt(16)');
