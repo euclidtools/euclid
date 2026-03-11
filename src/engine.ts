@@ -26,7 +26,7 @@ math.import(
   { override: true }
 );
 
-type EngineResult = { result: string } | { error: string };
+export type EngineResult = { result: string } | { error: string };
 
 export function evaluateExpression(expression: string, precision: number = 14): EngineResult {
   if (expression.length > MAX_EXPRESSION_LENGTH) {
@@ -59,10 +59,10 @@ export function convertUnit(value: number, from: string, to: string): EngineResu
   }
 }
 
-type StatOperation = 'mean' | 'median' | 'mode' | 'std' | 'variance' | 'min' | 'max' | 'sum' | 'percentile';
+export type StatOperation = 'mean' | 'median' | 'mode' | 'std' | 'variance' | 'min' | 'max' | 'sum' | 'percentile';
 
 export function computeStatistic(
-  operation: string,
+  operation: StatOperation,
   data: number[],
   percentile?: number
 ): EngineResult {
@@ -76,7 +76,7 @@ export function computeStatistic(
   try {
     let result: number | number[];
 
-    switch (operation as StatOperation) {
+    switch (operation) {
       case 'mean':
         result = math.mean(data) as number;
         break;
@@ -103,8 +103,11 @@ export function computeStatistic(
         result = math.sum(data) as number;
         break;
       case 'percentile':
-        if (percentile === undefined || percentile === null) {
+        if (percentile === undefined) {
           return { error: 'Percentile value is required when operation is "percentile"' };
+        }
+        if (percentile < 0 || percentile > 100) {
+          return { error: 'Percentile must be between 0 and 100' };
         }
         result = math.quantileSeq(data, percentile / 100) as number;
         break;

@@ -170,6 +170,18 @@ describe('computeStatistic', () => {
     expect(result).toHaveProperty('error');
   });
 
+  it('returns error for percentile below 0', () => {
+    const result = computeStatistic('percentile', [1, 2, 3, 4, 5], -1);
+    expect(result).toHaveProperty('error');
+    expect((result as { error: string }).error).toContain('between 0 and 100');
+  });
+
+  it('returns error for percentile above 100', () => {
+    const result = computeStatistic('percentile', [1, 2, 3, 4, 5], 101);
+    expect(result).toHaveProperty('error');
+    expect((result as { error: string }).error).toContain('between 0 and 100');
+  });
+
   it('returns error for empty data array', () => {
     const result = computeStatistic('mean', []);
     expect(result).toHaveProperty('error');
