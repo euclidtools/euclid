@@ -60,6 +60,31 @@ describe('evaluateExpression', () => {
     const result = evaluateExpression('parse("2+3")');
     expect(result).toHaveProperty('error');
   });
+
+  it('blocks disabled function: createUnit', () => {
+    const result = evaluateExpression('createUnit("foo")');
+    expect(result).toHaveProperty('error');
+  });
+
+  it('blocks disabled function: simplify', () => {
+    const result = evaluateExpression('simplify("x+x")');
+    expect(result).toHaveProperty('error');
+  });
+
+  it('blocks disabled function: derivative', () => {
+    const result = evaluateExpression('derivative("x^2", "x")');
+    expect(result).toHaveProperty('error');
+  });
+
+  it('blocks disabled function: resolve', () => {
+    const result = evaluateExpression('resolve("x+1")');
+    expect(result).toHaveProperty('error');
+  });
+
+  it('blocks disabled function: reviver', () => {
+    const result = evaluateExpression('reviver("test", 1)');
+    expect(result).toHaveProperty('error');
+  });
 });
 
 describe('convertUnit', () => {
@@ -125,6 +150,8 @@ describe('computeStatistic', () => {
   it('computes variance', () => {
     const result = computeStatistic('variance', data);
     expect(result).toHaveProperty('result');
+    // mathjs variance() uses sample variance (Bessel's correction, n-1 denominator) by default
+    expect(Number((result as { result: string }).result)).toBeCloseTo(447.7, 5);
   });
 
   it('computes mode', () => {
@@ -146,6 +173,13 @@ describe('computeStatistic', () => {
   it('returns error for empty data array', () => {
     const result = computeStatistic('mean', []);
     expect(result).toHaveProperty('error');
+  });
+
+  it('computes successfully with a large valid array (10000 elements)', () => {
+    const largeData = Array.from({ length: 10000 }, (_, i) => i);
+    const result = computeStatistic('mean', largeData);
+    expect(result).toHaveProperty('result');
+    expect(Number((result as { result: string }).result)).toBeCloseTo(4999.5, 5);
   });
 
   it('rejects data arrays over 10000 elements', () => {
