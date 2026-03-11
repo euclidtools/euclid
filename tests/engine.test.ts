@@ -149,6 +149,7 @@ describe('convertUnit', () => {
   it('normalizes natural-language unit names', () => {
     const result = convertUnit(100, 'celsius', 'fahrenheit');
     expect(result).toHaveProperty('result');
+    expect(Number((result as { result: string }).result)).toBeCloseTo(212, 0);
   });
 
   it('returns note when units were normalized', () => {
