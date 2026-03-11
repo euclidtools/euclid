@@ -8,16 +8,16 @@ npm package: `euclid-mcp`. Brand: Euclid. License: MIT.
 
 ## Decisions
 
-| Decision | Choice | Rationale |
-|---|---|---|
-| Tool architecture | Separate tools (`calculate`, `convert`, `statistics`) | Clearer affordances for the LLM, focused schemas per tool |
-| Percentage syntax | No preprocessing | The model translates natural language to valid expressions; tool stays deterministic |
-| Error format | Middle ground — mathjs message + original expression, no stack trace | Enough for the model to retry; no noise |
-| Expression limit | 1000 characters | Generous for any legitimate expression |
-| Computation timeout | 5 seconds, hardcoded | Legitimate expressions evaluate in ms; no need for configurability |
-| Output format | Simple — `{ result, expression }` | Model infers type from the result string |
-| Statistics in v1 | Yes | Straightforward to implement, rounds out the tool set |
-| Timeout mechanism | `vm.runInNewContext` with timeout | Handles synchronous mathjs timeout natively, lighter than worker threads |
+| Decision            | Choice                                                               | Rationale                                                                            |
+| ------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Tool architecture   | Separate tools (`calculate`, `convert`, `statistics`)                | Clearer affordances for the LLM, focused schemas per tool                            |
+| Percentage syntax   | No preprocessing                                                     | The model translates natural language to valid expressions; tool stays deterministic |
+| Error format        | Middle ground — mathjs message + original expression, no stack trace | Enough for the model to retry; no noise                                              |
+| Expression limit    | 1000 characters                                                      | Generous for any legitimate expression                                               |
+| Computation timeout | 5 seconds, hardcoded                                                 | Legitimate expressions evaluate in ms; no need for configurability                   |
+| Output format       | Simple — `{ result, expression }`                                    | Model infers type from the result string                                             |
+| Statistics in v1    | Yes                                                                  | Straightforward to implement, rounds out the tool set                                |
+| Timeout mechanism   | `vm.runInNewContext` with timeout                                    | Handles synchronous mathjs timeout natively, lighter than worker threads             |
 
 ## Architecture
 
@@ -54,6 +54,7 @@ euclid-mcp/
 ### `calculate`
 
 Input:
+
 - `expression: string` — mathematical expression to evaluate
 - `precision?: number` — decimal places (default 10)
 
@@ -65,6 +66,7 @@ Tool description teaches the model when to use it (arithmetic, exponents, trig, 
 ### `convert`
 
 Input:
+
 - `value: number` — the numeric value to convert
 - `from: string` — source unit
 - `to: string` — target unit
@@ -74,6 +76,7 @@ Output (success): `{ result: "3.10686", from: "km", to: "miles", value: 5 }`
 ### `statistics`
 
 Input:
+
 - `operation: enum` — one of: mean, median, mode, std, variance, min, max, sum, percentile
 - `data: number[]` — array of numbers (max 10,000 elements)
 - `percentile?: number` — required when operation is "percentile"
@@ -85,23 +88,28 @@ All tools return `isError: true` in the MCP response on failure.
 ## Engine & Security
 
 Sandboxed mathjs instance with disabled functions:
+
 - `import`, `createUnit`, `evaluate`, `parse`, `simplify` — all throw errors
 
 Input validation:
+
 - Expression length: max 1000 characters
 - Statistics data array: max 10,000 elements
 
 Computation timeout:
+
 - 5 seconds via `vm.runInNewContext` with `timeout` option
 - On timeout: `"Computation timed out after 5 seconds"`
 
 Error formatting:
+
 - Catches mathjs errors, extracts message (no stack trace)
 - Returns `{ error: "<type>: <message>", expression: "<original input>" }`
 
 ## Testing
 
 Unit tests with vitest:
+
 - `calculate.test.ts` — arithmetic, exponents, trig, logs, factorials, constants, complex numbers, precision
 - `convert.test.ts` — length, weight, temperature, volume, data units, invalid pairs
 - `statistics.test.ts` — all 9 operations, edge cases (single element, empty array, percentile validation)

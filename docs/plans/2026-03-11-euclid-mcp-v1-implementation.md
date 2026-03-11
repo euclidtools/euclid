@@ -13,6 +13,7 @@
 ### Task 1: Project Scaffolding
 
 **Files:**
+
 - Create: `package.json`
 - Create: `tsconfig.json`
 - Create: `.gitignore`
@@ -80,6 +81,7 @@ dist/
 **Step 4: Install dependencies**
 
 Run:
+
 ```bash
 pnpm init 2>/dev/null; pnpm add @modelcontextprotocol/server mathjs zod && pnpm add -D typescript tsx vitest tsup eslint prettier @types/node
 ```
@@ -91,6 +93,7 @@ Note: if `@modelcontextprotocol/server` doesn't resolve, try `@modelcontextproto
 **Step 5: Create src/ and tests/ directories**
 
 Run:
+
 ```bash
 mkdir -p src/tools tests
 ```
@@ -107,6 +110,7 @@ git commit -m "chore: scaffold project with dependencies"
 ### Task 2: Engine Module (TDD)
 
 **Files:**
+
 - Create: `src/engine.ts`
 - Create: `tests/engine.test.ts`
 
@@ -301,23 +305,41 @@ const limitedEvaluate = math.evaluate;
 // Disable dangerous functions
 math.import(
   {
-    import: () => { throw new Error('Function import is disabled'); },
-    createUnit: () => { throw new Error('Function createUnit is disabled'); },
-    evaluate: () => { throw new Error('Function evaluate is disabled'); },
-    parse: () => { throw new Error('Function parse is disabled'); },
-    simplify: () => { throw new Error('Function simplify is disabled'); },
-    derivative: () => { throw new Error('Function derivative is disabled'); },
-    resolve: () => { throw new Error('Function resolve is disabled'); },
-    reviver: () => { throw new Error('Function reviver is disabled'); },
+    import: () => {
+      throw new Error('Function import is disabled');
+    },
+    createUnit: () => {
+      throw new Error('Function createUnit is disabled');
+    },
+    evaluate: () => {
+      throw new Error('Function evaluate is disabled');
+    },
+    parse: () => {
+      throw new Error('Function parse is disabled');
+    },
+    simplify: () => {
+      throw new Error('Function simplify is disabled');
+    },
+    derivative: () => {
+      throw new Error('Function derivative is disabled');
+    },
+    resolve: () => {
+      throw new Error('Function resolve is disabled');
+    },
+    reviver: () => {
+      throw new Error('Function reviver is disabled');
+    },
   },
-  { override: true }
+  { override: true },
 );
 
 type EngineResult = { result: string } | { error: string };
 
 export function evaluateExpression(expression: string, precision: number = 14): EngineResult {
   if (expression.length > MAX_EXPRESSION_LENGTH) {
-    return { error: `Expression too long (${expression.length} chars, max ${MAX_EXPRESSION_LENGTH})` };
+    return {
+      error: `Expression too long (${expression.length} chars, max ${MAX_EXPRESSION_LENGTH})`,
+    };
   }
 
   try {
@@ -346,12 +368,21 @@ export function convertUnit(value: number, from: string, to: string): EngineResu
   }
 }
 
-type StatOperation = 'mean' | 'median' | 'mode' | 'std' | 'variance' | 'min' | 'max' | 'sum' | 'percentile';
+type StatOperation =
+  | 'mean'
+  | 'median'
+  | 'mode'
+  | 'std'
+  | 'variance'
+  | 'min'
+  | 'max'
+  | 'sum'
+  | 'percentile';
 
 export function computeStatistic(
   operation: string,
   data: number[],
-  percentile?: number
+  percentile?: number,
 ): EngineResult {
   if (data.length === 0) {
     return { error: 'Data array is empty' };
@@ -428,6 +459,7 @@ git commit -m "feat: add engine module with sandboxed mathjs evaluation, unit co
 ### Task 3: Calculate Tool (TDD)
 
 **Files:**
+
 - Create: `src/tools/calculate.ts`
 - Create: `tests/calculate.test.ts`
 
@@ -512,10 +544,7 @@ Examples of when NOT to use this tool:
     expression: z
       .string()
       .describe("Mathematical expression to evaluate, e.g. '(245 * 389) + (12^3 / 7)'"),
-    precision: z
-      .number()
-      .optional()
-      .describe('Significant digits for the result. Default: 14'),
+    precision: z.number().optional().describe('Significant digits for the result. Default: 14'),
   }),
 
   handler: async (args: { expression: string; precision?: number }) => {
@@ -523,13 +552,23 @@ Examples of when NOT to use this tool:
 
     if ('error' in result) {
       return {
-        content: [{ type: 'text' as const, text: JSON.stringify({ error: result.error, expression: args.expression }) }],
+        content: [
+          {
+            type: 'text' as const,
+            text: JSON.stringify({ error: result.error, expression: args.expression }),
+          },
+        ],
         isError: true,
       };
     }
 
     return {
-      content: [{ type: 'text' as const, text: JSON.stringify({ result: result.result, expression: args.expression }) }],
+      content: [
+        {
+          type: 'text' as const,
+          text: JSON.stringify({ result: result.result, expression: args.expression }),
+        },
+      ],
     };
   },
 };
@@ -553,6 +592,7 @@ git commit -m "feat: add calculate tool with expression evaluation"
 ### Task 4: Convert Tool (TDD)
 
 **Files:**
+
 - Create: `src/tools/convert.ts`
 - Create: `tests/convert.test.ts`
 
@@ -638,13 +678,33 @@ Examples:
 
     if ('error' in result) {
       return {
-        content: [{ type: 'text' as const, text: JSON.stringify({ error: result.error, value: args.value, from: args.from, to: args.to }) }],
+        content: [
+          {
+            type: 'text' as const,
+            text: JSON.stringify({
+              error: result.error,
+              value: args.value,
+              from: args.from,
+              to: args.to,
+            }),
+          },
+        ],
         isError: true,
       };
     }
 
     return {
-      content: [{ type: 'text' as const, text: JSON.stringify({ result: result.result, value: args.value, from: args.from, to: args.to }) }],
+      content: [
+        {
+          type: 'text' as const,
+          text: JSON.stringify({
+            result: result.result,
+            value: args.value,
+            from: args.from,
+            to: args.to,
+          }),
+        },
+      ],
     };
   },
 };
@@ -668,6 +728,7 @@ git commit -m "feat: add convert tool for unit conversion"
 ### Task 5: Statistics Tool (TDD)
 
 **Files:**
+
 - Create: `src/tools/statistics.ts`
 - Create: `tests/statistics.test.ts`
 
@@ -684,7 +745,10 @@ describe('statisticsTool', () => {
   });
 
   it('handler computes mean', async () => {
-    const response = await statisticsTool.handler({ operation: 'mean', data: [23, 45, 12, 67, 34] });
+    const response = await statisticsTool.handler({
+      operation: 'mean',
+      data: [23, 45, 12, 67, 34],
+    });
     expect(response.isError).toBeUndefined();
     const content = JSON.parse(response.content[0].text);
     expect(Number(content.result)).toBeCloseTo(36.2, 5);
@@ -692,13 +756,20 @@ describe('statisticsTool', () => {
   });
 
   it('handler computes median', async () => {
-    const response = await statisticsTool.handler({ operation: 'median', data: [23, 45, 12, 67, 34] });
+    const response = await statisticsTool.handler({
+      operation: 'median',
+      data: [23, 45, 12, 67, 34],
+    });
     const content = JSON.parse(response.content[0].text);
     expect(content.result).toBe('34');
   });
 
   it('handler computes percentile', async () => {
-    const response = await statisticsTool.handler({ operation: 'percentile', data: [1, 2, 3, 4, 5], percentile: 90 });
+    const response = await statisticsTool.handler({
+      operation: 'percentile',
+      data: [1, 2, 3, 4, 5],
+      percentile: 90,
+    });
     expect(response.isError).toBeUndefined();
     const content = JSON.parse(response.content[0].text);
     expect(Number(content.result)).toBeCloseTo(4.6, 1);
@@ -763,9 +834,7 @@ Examples:
     operation: z
       .enum(['mean', 'median', 'mode', 'std', 'variance', 'min', 'max', 'sum', 'percentile'])
       .describe('The statistical operation to perform'),
-    data: z
-      .array(z.number())
-      .describe('Array of numbers to compute the statistic on'),
+    data: z.array(z.number()).describe('Array of numbers to compute the statistic on'),
     percentile: z
       .number()
       .optional()
@@ -777,13 +846,23 @@ Examples:
 
     if ('error' in result) {
       return {
-        content: [{ type: 'text' as const, text: JSON.stringify({ error: result.error, operation: args.operation }) }],
+        content: [
+          {
+            type: 'text' as const,
+            text: JSON.stringify({ error: result.error, operation: args.operation }),
+          },
+        ],
         isError: true,
       };
     }
 
     return {
-      content: [{ type: 'text' as const, text: JSON.stringify({ result: result.result, operation: args.operation }) }],
+      content: [
+        {
+          type: 'text' as const,
+          text: JSON.stringify({ result: result.result, operation: args.operation }),
+        },
+      ],
     };
   },
 };
@@ -807,6 +886,7 @@ git commit -m "feat: add statistics tool with mean, median, mode, std, variance,
 ### Task 6: Server Entry Point
 
 **Files:**
+
 - Create: `src/index.ts`
 
 **Step 1: Implement the server entry point**
@@ -830,7 +910,7 @@ server.registerTool(
     description: calculateTool.description,
     inputSchema: calculateTool.inputSchema,
   },
-  async (args) => calculateTool.handler(args as { expression: string; precision?: number })
+  async (args) => calculateTool.handler(args as { expression: string; precision?: number }),
 );
 
 server.registerTool(
@@ -839,7 +919,7 @@ server.registerTool(
     description: convertTool.description,
     inputSchema: convertTool.inputSchema,
   },
-  async (args) => convertTool.handler(args as { value: number; from: string; to: string })
+  async (args) => convertTool.handler(args as { value: number; from: string; to: string }),
 );
 
 server.registerTool(
@@ -848,7 +928,8 @@ server.registerTool(
     description: statisticsTool.description,
     inputSchema: statisticsTool.inputSchema,
   },
-  async (args) => statisticsTool.handler(args as { operation: string; data: number[]; percentile?: number })
+  async (args) =>
+    statisticsTool.handler(args as { operation: string; data: number[]; percentile?: number }),
 );
 
 // Connect via stdio
@@ -876,6 +957,7 @@ git commit -m "feat: add server entry point with stdio transport and tool regist
 ### Task 7: Edge Cases Tests
 
 **Files:**
+
 - Create: `tests/edge-cases.test.ts`
 
 **Step 1: Write edge case tests**
@@ -997,6 +1079,7 @@ git commit -m "test: add edge case tests for division by zero, overflow, complex
 ### Task 8: Build & Distribution
 
 **Files:**
+
 - Modify: `package.json` (verify bin and build config)
 - Create: `tsup.config.ts` (if needed for custom config)
 - Create: `LICENSE`
@@ -1066,6 +1149,7 @@ git commit -m "chore: add LICENSE and build configuration"
 ### Task 9: CI & Lint Setup
 
 **Files:**
+
 - Create: `.github/workflows/ci.yml`
 - Create: `.eslintrc.json` (or `eslint.config.js`)
 - Create: `.prettierrc`
@@ -1123,13 +1207,9 @@ Create a minimal `eslint.config.js` (flat config):
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
-    ignores: ['dist/', 'node_modules/'],
-  },
-);
+export default tseslint.config(js.configs.recommended, ...tseslint.configs.recommended, {
+  ignores: ['dist/', 'node_modules/'],
+});
 ```
 
 Install additional eslint deps if needed:
@@ -1174,6 +1254,7 @@ Expected: no errors.
 **Step 4: Manually test the server (smoke test)**
 
 Run:
+
 ```bash
 echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}}}' | timeout 5 node dist/index.js 2>&1 || true
 ```
