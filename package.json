@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "euclid-mcp": "dist/index.js"
+    "euclid": "dist/index.js"
   },
   "scripts": {
     "dev": "tsx src/index.ts",

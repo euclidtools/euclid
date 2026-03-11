@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "euclid": {
-      "command": "euclid-mcp"
+      "command": "euclid"
     }
   }
 }
