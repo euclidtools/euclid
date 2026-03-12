@@ -1,7 +1,8 @@
 {
   "mcpServers": {
     "euclid": {
-      "command": "euclid"
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@euclid-tools/euclid-mcp"]
     }
   }
 }

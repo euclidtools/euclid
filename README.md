@@ -19,39 +19,128 @@ Add Euclid to your MCP client config. That's it.
 
 Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
 
+<details>
+<summary>macOS / Linux</summary>
+
 ```json
 {
   "mcpServers": {
     "euclid": {
       "command": "npx",
-      "args": ["-y", "euclid-mcp"]
+      "args": ["-y", "@euclid-tools/euclid-mcp"]
     }
   }
 }
 ```
+
+</details>
+
+<details>
+<summary>Windows</summary>
+
+```json
+{
+  "mcpServers": {
+    "euclid": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@euclid-tools/euclid-mcp"]
+    }
+  }
+}
+```
+
+</details>
 
 ### Claude Code
 
 ```bash
-claude mcp add euclid -- npx -y euclid-mcp
+# macOS / Linux
+claude mcp add euclid "npx -y @euclid-tools/euclid-mcp"
+
+# Windows — add via the /mcp menu or edit .claude.json directly (see note below)
 ```
 
-### Cursor / Windsurf
+> **Windows + Claude Code:** The `claude mcp add` command doesn't split `cmd /c` into separate args correctly. Instead, use the `/mcp` menu inside Claude Code, or manually add the entry to your `.claude.json` using the same JSON config shown in the Claude Desktop section above.
 
-Add to your MCP config:
+### Cursor
+
+Add to `~/.cursor/mcp.json`:
+
+<details>
+<summary>macOS / Linux</summary>
 
 ```json
 {
   "mcpServers": {
     "euclid": {
       "command": "npx",
-      "args": ["-y", "euclid-mcp"]
+      "args": ["-y", "@euclid-tools/euclid-mcp"]
     }
   }
 }
 ```
 
+</details>
+
+<details>
+<summary>Windows</summary>
+
+```json
+{
+  "mcpServers": {
+    "euclid": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@euclid-tools/euclid-mcp"]
+    }
+  }
+}
+```
+
+</details>
+
+### Windsurf
+
+Add to `~/.windsurf/mcp.json`:
+
+<details>
+<summary>macOS / Linux</summary>
+
+```json
+{
+  "mcpServers": {
+    "euclid": {
+      "command": "npx",
+      "args": ["-y", "@euclid-tools/euclid-mcp"]
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+<summary>Windows</summary>
+
+```json
+{
+  "mcpServers": {
+    "euclid": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@euclid-tools/euclid-mcp"]
+    }
+  }
+}
+```
+
+</details>
+
+### Other MCP Clients
+
+Any MCP client that supports stdio transport will work. Use `npx -y @euclid-tools/euclid-mcp` as the command (on Windows, run it through `cmd /c`).
+
 Restart your client. Done. Your LLM now has a calculator.
+
+> **Why `cmd /c` on Windows?** On Windows, `npx` is a batch script (`npx.cmd`). MCP clients spawn processes directly, which can't execute `.cmd` files without a shell wrapper. Using `cmd /c` solves this. This affects all npx-based MCP servers, not just Euclid.
 
 ---
 
