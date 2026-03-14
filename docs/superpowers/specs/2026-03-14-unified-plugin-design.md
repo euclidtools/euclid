@@ -133,6 +133,7 @@ Bash script that:
 ```json
 {
   "hookSpecificOutput": {
+    "hookEventName": "SessionStart",
     "additionalContext": "Euclid deterministic math tools are available. Use calculate, convert, and statistics MCP tools for any numerical computation instead of mental math."
   }
 }
