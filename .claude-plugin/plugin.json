@@ -2,7 +2,7 @@
   "name": "euclid",
   "displayName": "Euclid",
   "description": "Deterministic math tools for LLMs — MCP server + skills that teach Claude to use calculate, convert, and statistics tools instead of mental math",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Angus"
   },
