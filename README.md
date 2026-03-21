@@ -186,10 +186,11 @@ there is no way to tell which. Always use Euclid's MCP tools instead.
 | `calculate`  | Arithmetic, percentages, margins, exponents, trig, logarithms, factorials — any expression with a numerical answer |
 | `convert`    | Unit conversions: m² to acres, km to miles, L/hr to gal/hr, °C to °F, bytes to kB, etc.                            |
 | `statistics` | Mean, median, mode, std deviation, variance, percentile, min, max, sum on any dataset                              |
+| `datetime`   | Date differences, add/subtract time, business days, age, day of week, quarter, leap year — any calendar arithmetic |
 
 This applies everywhere — not just code. Analytics, business metrics, growth rates,
-marketing numbers, cost calculations, ad-hoc arithmetic during conversation. If there
-is a number to compute, use Euclid. No exceptions.
+marketing numbers, cost calculations, date arithmetic during conversation. If there
+is a number to compute or a date to calculate, use Euclid. No exceptions.
 ```
 
 **Why this matters:** LLMs will confidently produce incorrect arithmetic with no indication anything is wrong. A model that returns `247 × 389 = 96,183` looks just as confident as one that returns the correct `96,083`. The only way to guarantee correctness is to compute, not predict.
@@ -215,7 +216,7 @@ Think of it like what `grep` did for AI code search — a simple, proven tool th
 
 ## Tools
 
-Euclid exposes multiple purpose-built tools, so the model can pick the right one for the job.
+Euclid exposes four purpose-built tools, so the model can pick the right one for the job.
 
 ### `calculate`
 
@@ -260,6 +261,21 @@ statistics("mean", [23, 45, 12, 67, 34])     → 36.2
 statistics("std", [23, 45, 12, 67, 34])       → 21.159
 statistics("percentile", [1, 2, 3, 4, 5], 90) → 4.6
 ```
+
+### `datetime`
+
+Deterministic date and time arithmetic. No timezone guessing, no DST surprises — pure calendar math.
+
+```
+datetime("difference", { from: "2026-01-01", to: "2026-03-15", unit: "days" })  → 73 days
+datetime("add", { date: "2026-01-01", amount: 90, unit: "days" })               → 2026-04-01
+datetime("age", { birthDate: "1990-06-15", asOf: "2026-03-21" })                → 35 years, 9 months, 6 days
+datetime("business_days", { from: "2026-01-01", to: "2026-01-31" })             → 22
+datetime("day_of_week", { date: "2026-03-21" })                                 → Saturday
+datetime("is_leap_year", { year: 2024 })                                        → true
+```
+
+**9 operations:** `difference`, `add`, `subtract`, `business_days`, `days_in_month`, `age`, `quarter`, `day_of_week`, `is_leap_year`. Dates in ISO 8601 format (`YYYY-MM-DD`). Powered by [date-fns](https://date-fns.org).
 
 ---
 
@@ -312,6 +328,7 @@ Expression evaluation is sandboxed — `import`, `require`, `createUnit`, nested
 - **TypeScript** — type-safe, well-documented
 - **[@modelcontextprotocol/sdk](https://github.com/modelcontextprotocol/typescript-sdk)** — official MCP TypeScript SDK
 - **[mathjs](https://mathjs.org)** — the math engine (15k+ stars, 2.5M+ weekly npm downloads, 13 years of battle-testing)
+- **[date-fns](https://date-fns.org)** — date arithmetic (52M+ weekly npm downloads, tree-shakeable)
 - **[zod](https://github.com/colinhacks/zod)** — schema validation
 
 ---
@@ -323,7 +340,7 @@ Expression evaluation is sandboxed — `import`, `require`, `createUnit`, nested
 - [x] `statistics` tool — mean, median, std, percentile, etc.
 - [x] Claude Code plugin — skills + auto-registration
 - [ ] Financial calculations — compound interest, NPV, amortisation
-- [ ] Date/time arithmetic — deterministic, not "about 3 months"
+- [x] Date/time arithmetic — deterministic, not "about 3 months"
 - [ ] LLM accuracy benchmarks — prove the difference with data
 - [ ] Streamable HTTP transport — for remote/hosted deployments
 
