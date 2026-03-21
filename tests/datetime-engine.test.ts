@@ -10,9 +10,9 @@ describe('computeDatetime', () => {
         to: '2026-03-15',
       });
       expect(result).not.toHaveProperty('error');
-      const r = result as { result: string; years: number; months: number; days: number };
-      expect(r.months).toBe(2);
-      expect(r.days).toBe(14);
+      const r = result as { result: string; breakdown: { years: number; months: number; days: number } };
+      expect(r.breakdown.months).toBe(2);
+      expect(r.breakdown.days).toBe(14);
     });
 
     it('computes difference in a specific unit', () => {
@@ -275,25 +275,30 @@ describe('computeDatetime', () => {
       const result = computeDatetime('age', { asOf: '2026-03-21' });
       expect(result).toHaveProperty('error');
     });
+
+    it('returns error for missing asOf', () => {
+      const result = computeDatetime('age', { birthDate: '1990-06-15' });
+      expect(result).toHaveProperty('error');
+    });
   });
 
   describe('quarter', () => {
     it('returns Q1 for January', () => {
       const result = computeDatetime('quarter', { date: '2026-01-15' });
       expect(result).not.toHaveProperty('error');
-      const r = result as { result: string; quarter: number; start: string; end: string };
+      const r = result as { result: string; quarter: number; quarterStart: string; quarterEnd: string };
       expect(r.quarter).toBe(1);
-      expect(r.start).toBe('2026-01-01');
-      expect(r.end).toBe('2026-03-31');
+      expect(r.quarterStart).toBe('2026-01-01');
+      expect(r.quarterEnd).toBe('2026-03-31');
     });
 
     it('returns Q4 for December', () => {
       const result = computeDatetime('quarter', { date: '2026-12-15' });
       expect(result).not.toHaveProperty('error');
-      const r = result as { result: string; quarter: number; start: string; end: string };
+      const r = result as { result: string; quarter: number; quarterStart: string; quarterEnd: string };
       expect(r.quarter).toBe(4);
-      expect(r.start).toBe('2026-10-01');
-      expect(r.end).toBe('2026-12-31');
+      expect(r.quarterStart).toBe('2026-10-01');
+      expect(r.quarterEnd).toBe('2026-12-31');
     });
   });
 
@@ -301,24 +306,24 @@ describe('computeDatetime', () => {
     it('returns Saturday for 2026-03-21', () => {
       const result = computeDatetime('day_of_week', { date: '2026-03-21' });
       expect(result).not.toHaveProperty('error');
-      const r = result as { result: string; dayName: string; dayNumber: number };
-      expect(r.dayName).toBe('Saturday');
+      const r = result as { result: string; dayOfWeek: string; dayNumber: number };
+      expect(r.dayOfWeek).toBe('Saturday');
       expect(r.dayNumber).toBe(6);
     });
 
     it('returns Monday for 2026-03-16', () => {
       const result = computeDatetime('day_of_week', { date: '2026-03-16' });
       expect(result).not.toHaveProperty('error');
-      const r = result as { result: string; dayName: string; dayNumber: number };
-      expect(r.dayName).toBe('Monday');
+      const r = result as { result: string; dayOfWeek: string; dayNumber: number };
+      expect(r.dayOfWeek).toBe('Monday');
       expect(r.dayNumber).toBe(1);
     });
 
     it('returns Thursday for 2024-02-29 (leap day)', () => {
       const result = computeDatetime('day_of_week', { date: '2024-02-29' });
       expect(result).not.toHaveProperty('error');
-      const r = result as { result: string; dayName: string; dayNumber: number };
-      expect(r.dayName).toBe('Thursday');
+      const r = result as { result: string; dayOfWeek: string; dayNumber: number };
+      expect(r.dayOfWeek).toBe('Thursday');
       expect(r.dayNumber).toBe(4);
     });
   });
@@ -328,6 +333,7 @@ describe('computeDatetime', () => {
       const result = computeDatetime('is_leap_year', { year: 2024 });
       expect(result).not.toHaveProperty('error');
       const r = result as { result: string; isLeapYear: boolean };
+      expect(r.result).toBe('true');
       expect(r.isLeapYear).toBe(true);
     });
 
@@ -335,6 +341,7 @@ describe('computeDatetime', () => {
       const result = computeDatetime('is_leap_year', { year: 2026 });
       expect(result).not.toHaveProperty('error');
       const r = result as { result: string; isLeapYear: boolean };
+      expect(r.result).toBe('false');
       expect(r.isLeapYear).toBe(false);
     });
 
@@ -342,6 +349,7 @@ describe('computeDatetime', () => {
       const result = computeDatetime('is_leap_year', { year: 1900 });
       expect(result).not.toHaveProperty('error');
       const r = result as { result: string; isLeapYear: boolean };
+      expect(r.result).toBe('false');
       expect(r.isLeapYear).toBe(false);
     });
 
@@ -349,6 +357,7 @@ describe('computeDatetime', () => {
       const result = computeDatetime('is_leap_year', { year: 2000 });
       expect(result).not.toHaveProperty('error');
       const r = result as { result: string; isLeapYear: boolean };
+      expect(r.result).toBe('true');
       expect(r.isLeapYear).toBe(true);
     });
 

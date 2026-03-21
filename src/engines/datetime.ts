@@ -190,12 +190,14 @@ function opDifference(args: Record<string, unknown>): DatetimeResult {
 
   const base: DatetimeResult = {
     result: resultStr,
-    years: sign * years,
-    months: sign * months,
-    days: sign * days,
-    hours: sign * hours,
-    minutes: sign * minutes,
-    seconds: sign * seconds,
+    breakdown: {
+      years: sign * years,
+      months: sign * months,
+      days: sign * days,
+      hours: sign * hours,
+      minutes: sign * minutes,
+      seconds: sign * seconds,
+    },
   };
   if (note) (base as Record<string, unknown>).note = note;
   return base;
@@ -350,21 +352,17 @@ function opDaysInMonth(args: Record<string, unknown>): DatetimeResult {
 
 function opAge(args: Record<string, unknown>): DatetimeResult {
   if (!args.birthDate) return { error: 'Missing required parameter: birthDate' };
+  if (!args.asOf) return { error: 'Missing required parameter: asOf' };
 
   const parsedBirth = parseDate(args.birthDate);
   if ('error' in parsedBirth) return parsedBirth;
 
-  // asOf defaults to now, but we parse it if provided
-  let asOfDate: Date;
   const norms: NormalizeResult[] = [parsedBirth.norm];
-  if (args.asOf) {
-    const parsedAsOf = parseDate(args.asOf);
-    if ('error' in parsedAsOf) return parsedAsOf;
-    asOfDate = parsedAsOf.date;
-    norms.push(parsedAsOf.norm);
-  } else {
-    asOfDate = new Date();
-  }
+  let asOfDate: Date;
+  const parsedAsOf = parseDate(args.asOf);
+  if ('error' in parsedAsOf) return parsedAsOf;
+  asOfDate = parsedAsOf.date;
+  norms.push(parsedAsOf.norm);
 
   const { date: birthDate } = parsedBirth;
 
@@ -406,8 +404,8 @@ function opQuarter(args: Record<string, unknown>): DatetimeResult {
   const base: DatetimeResult = {
     result: `Q${q} ${format(date, 'yyyy')}`,
     quarter: q,
-    start: formatDate(qStart, false),
-    end: formatDate(qEnd, false),
+    quarterStart: formatDate(qStart, false),
+    quarterEnd: formatDate(qEnd, false),
   };
   if (note) (base as Record<string, unknown>).note = note;
   return base;
@@ -427,7 +425,7 @@ function opDayOfWeek(args: Record<string, unknown>): DatetimeResult {
   const note = buildNote([norm]);
   const base: DatetimeResult = {
     result: `${dayName} (day ${dayNumber})`,
-    dayName,
+    dayOfWeek: dayName,
     dayNumber,
   };
   if (note) (base as Record<string, unknown>).note = note;
@@ -445,7 +443,7 @@ function opIsLeapYear(args: Record<string, unknown>): DatetimeResult {
   const leap = isLeapYear(date);
 
   return {
-    result: leap ? `${year} is a leap year` : `${year} is not a leap year`,
+    result: String(leap),
     isLeapYear: leap,
     year,
   };
