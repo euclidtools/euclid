@@ -10,7 +10,10 @@ describe('computeDatetime', () => {
         to: '2026-03-15',
       });
       expect(result).not.toHaveProperty('error');
-      const r = result as { result: string; breakdown: { years: number; months: number; days: number } };
+      const r = result as {
+        result: string;
+        breakdown: { years: number; months: number; days: number };
+      };
       expect(r.breakdown.months).toBe(2);
       expect(r.breakdown.days).toBe(14);
     });
@@ -286,7 +289,12 @@ describe('computeDatetime', () => {
     it('returns Q1 for January', () => {
       const result = computeDatetime('quarter', { date: '2026-01-15' });
       expect(result).not.toHaveProperty('error');
-      const r = result as { result: string; quarter: number; quarterStart: string; quarterEnd: string };
+      const r = result as {
+        result: string;
+        quarter: number;
+        quarterStart: string;
+        quarterEnd: string;
+      };
       expect(r.quarter).toBe(1);
       expect(r.quarterStart).toBe('2026-01-01');
       expect(r.quarterEnd).toBe('2026-03-31');
@@ -295,7 +303,12 @@ describe('computeDatetime', () => {
     it('returns Q4 for December', () => {
       const result = computeDatetime('quarter', { date: '2026-12-15' });
       expect(result).not.toHaveProperty('error');
-      const r = result as { result: string; quarter: number; quarterStart: string; quarterEnd: string };
+      const r = result as {
+        result: string;
+        quarter: number;
+        quarterStart: string;
+        quarterEnd: string;
+      };
       expect(r.quarter).toBe(4);
       expect(r.quarterStart).toBe('2026-10-01');
       expect(r.quarterEnd).toBe('2026-12-31');

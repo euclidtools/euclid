@@ -15,35 +15,38 @@
 ## File Map
 
 ### New Files
-| File | Responsibility |
-|------|---------------|
-| `src/engines/datetime.ts` | Pure date/time operation functions (9 ops). Returns `{ result: string, ...structured } \| { error: string }` |
-| `src/tools/datetime.ts` | Tool definition: name, description, Zod schema, handler. Dispatches to engine |
-| `src/error-hints/index.ts` | Registry dispatcher: `getErrorHint(tool, error)` routes to per-tool module |
-| `src/error-hints/calculate.ts` | Calculate hints (migrated from monolith) |
-| `src/error-hints/convert.ts` | Convert hints (migrated from monolith) |
-| `src/error-hints/statistics.ts` | Statistics hints (migrated from monolith) |
-| `src/error-hints/datetime.ts` | Datetime-specific error hints |
-| `tests/datetime.test.ts` | Tests for all 9 datetime operations + edge cases + errors |
-| `skills/math/DATETIME.md` | LLM reference doc for the datetime tool |
+
+| File                            | Responsibility                                                                                               |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `src/engines/datetime.ts`       | Pure date/time operation functions (9 ops). Returns `{ result: string, ...structured } \| { error: string }` |
+| `src/tools/datetime.ts`         | Tool definition: name, description, Zod schema, handler. Dispatches to engine                                |
+| `src/error-hints/index.ts`      | Registry dispatcher: `getErrorHint(tool, error)` routes to per-tool module                                   |
+| `src/error-hints/calculate.ts`  | Calculate hints (migrated from monolith)                                                                     |
+| `src/error-hints/convert.ts`    | Convert hints (migrated from monolith)                                                                       |
+| `src/error-hints/statistics.ts` | Statistics hints (migrated from monolith)                                                                    |
+| `src/error-hints/datetime.ts`   | Datetime-specific error hints                                                                                |
+| `tests/datetime.test.ts`        | Tests for all 9 datetime operations + edge cases + errors                                                    |
+| `skills/math/DATETIME.md`       | LLM reference doc for the datetime tool                                                                      |
 
 ### Modified Files
-| File | Change |
-|------|--------|
-| `src/index.ts` | Import and register `datetimeTool` |
-| `src/normalization.ts` | Add `normalizeDate()` function |
-| `src/tools/calculate.ts` | Update import: `../error-hints.js` → `../error-hints/index.js` |
-| `src/tools/convert.ts` | Update import: `../error-hints.js` → `../error-hints/index.js` |
-| `src/tools/statistics.ts` | Update import: `../error-hints.js` → `../error-hints/index.js` |
-| `tests/error-hints.test.ts` | Update import: `../src/error-hints.js` → `../src/error-hints/index.js` |
-| `skills/math/SKILL.md` | Add `datetime` to decision table + quick reference |
-| `hooks/session-start` | Add `datetime` to the context injection text |
-| `.claude-plugin/plugin.json` | Update description to include `datetime` |
-| `package.json` | Add `date-fns` dependency |
+
+| File                         | Change                                                                 |
+| ---------------------------- | ---------------------------------------------------------------------- |
+| `src/index.ts`               | Import and register `datetimeTool`                                     |
+| `src/normalization.ts`       | Add `normalizeDate()` function                                         |
+| `src/tools/calculate.ts`     | Update import: `../error-hints.js` → `../error-hints/index.js`         |
+| `src/tools/convert.ts`       | Update import: `../error-hints.js` → `../error-hints/index.js`         |
+| `src/tools/statistics.ts`    | Update import: `../error-hints.js` → `../error-hints/index.js`         |
+| `tests/error-hints.test.ts`  | Update import: `../src/error-hints.js` → `../src/error-hints/index.js` |
+| `skills/math/SKILL.md`       | Add `datetime` to decision table + quick reference                     |
+| `hooks/session-start`        | Add `datetime` to the context injection text                           |
+| `.claude-plugin/plugin.json` | Update description to include `datetime`                               |
+| `package.json`               | Add `date-fns` dependency                                              |
 
 ### Deleted Files
-| File | Reason |
-|------|--------|
+
+| File                 | Reason                                   |
+| -------------------- | ---------------------------------------- |
 | `src/error-hints.ts` | Replaced by `src/error-hints/` directory |
 
 ---
@@ -51,6 +54,7 @@
 ## Task 1: Install `date-fns` dependency
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Install date-fns**
@@ -76,6 +80,7 @@ git commit -m "feat: add date-fns dependency for datetime tool"
 This is a pure refactor — no new functionality. Existing tests must continue passing with zero behavior change.
 
 **Files:**
+
 - Create: `src/error-hints/index.ts`
 - Create: `src/error-hints/calculate.ts`
 - Create: `src/error-hints/convert.ts`
@@ -93,13 +98,7 @@ Extract the calculate hints from the monolith. Each per-tool module exports `get
 ```typescript
 // src/error-hints/calculate.ts
 
-export const EXAMPLES = [
-  '2 * 3',
-  'sqrt(16)',
-  'sin(pi / 4)',
-  'log(100, 10)',
-  '12! / (4! * 8!)',
-];
+export const EXAMPLES = ['2 * 3', 'sqrt(16)', 'sin(pi / 4)', 'log(100, 10)', '12! / (4! * 8!)'];
 
 export function getHint(errorMessage: string): string {
   if (
@@ -201,10 +200,13 @@ Note: `ToolName` will be extended to include `'datetime'` in Task 5. For now, it
 In each of these three files, change the import path:
 
 `src/tools/calculate.ts:4` — change:
+
 ```typescript
 import { getErrorHint } from '../error-hints.js';
 ```
+
 to:
+
 ```typescript
 import { getErrorHint } from '../error-hints/index.js';
 ```
@@ -216,10 +218,13 @@ import { getErrorHint } from '../error-hints/index.js';
 - [ ] **Step 6: Update import in test file**
 
 `tests/error-hints.test.ts:3` — change:
+
 ```typescript
 import { getErrorHint } from '../src/error-hints.js';
 ```
+
 to:
+
 ```typescript
 import { getErrorHint } from '../src/error-hints/index.js';
 ```
@@ -246,6 +251,7 @@ git commit -m "refactor: extract error-hints into per-tool registry pattern"
 ## Task 3: Add `normalizeDate()` to normalization module
 
 **Files:**
+
 - Modify: `src/normalization.ts`
 - Modify: `tests/normalization.test.ts`
 
@@ -329,9 +335,18 @@ Add to the bottom of `src/normalization.ts`:
 
 ```typescript
 const MONTH_NAMES: Record<string, string> = {
-  january: '01', february: '02', march: '03', april: '04',
-  may: '05', june: '06', july: '07', august: '08',
-  september: '09', october: '10', november: '11', december: '12',
+  january: '01',
+  february: '02',
+  march: '03',
+  april: '04',
+  may: '05',
+  june: '06',
+  july: '07',
+  august: '08',
+  september: '09',
+  october: '10',
+  november: '11',
+  december: '12',
 };
 
 // Matches "Month DD, YYYY" or "Month DD YYYY"
@@ -396,6 +411,7 @@ git commit -m "feat: add normalizeDate() for unambiguous natural date formats"
 ## Task 4: Implement datetime engine
 
 **Files:**
+
 - Create: `src/engines/datetime.ts`
 - Create: `tests/datetime-engine.test.ts`
 
@@ -893,9 +909,7 @@ function requireFields(
 function buildNote(norms: NormalizeResult[]): string | undefined {
   const transformed = norms.filter((n) => n.wasTransformed);
   if (transformed.length === 0) return undefined;
-  return transformed
-    .map((n) => `Interpreted '${n.original}' as ${n.value}`)
-    .join('; ');
+  return transformed.map((n) => `Interpreted '${n.original}' as ${n.value}`).join('; ');
 }
 
 function computeDifference(args: DatetimeArgs): DatetimeResult {
@@ -1211,6 +1225,7 @@ git commit -m "feat: implement datetime engine with 9 operations"
 ## Task 5: Add datetime error hints
 
 **Files:**
+
 - Create: `src/error-hints/datetime.ts`
 - Modify: `src/error-hints/index.ts`
 - Modify: `tests/error-hints.test.ts`
@@ -1335,6 +1350,7 @@ git commit -m "feat: add datetime error hints to registry"
 ## Task 6: Create datetime tool definition and register it
 
 **Files:**
+
 - Create: `src/tools/datetime.ts`
 - Modify: `src/index.ts`
 - Create: `tests/datetime.test.ts`
@@ -1476,10 +1492,7 @@ All dates should be in ISO 8601 format: YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss. Natur
         'is_leap_year',
       ])
       .describe('The datetime operation to perform'),
-    date: z
-      .string()
-      .optional()
-      .describe('ISO 8601 date (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss)'),
+    date: z.string().optional().describe('ISO 8601 date (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss)'),
     from: z.string().optional().describe('Start date (ISO 8601)'),
     to: z.string().optional().describe('End date (ISO 8601)'),
     amount: z.number().optional().describe('Number of units to add/subtract'),
@@ -1551,11 +1564,13 @@ All dates should be in ISO 8601 format: YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss. Natur
 - [ ] **Step 4: Register the tool in `src/index.ts`**
 
 Add the import at line 6:
+
 ```typescript
 import { datetimeTool } from './tools/datetime.js';
 ```
 
 Add the registration after the statistics block (after line 43):
+
 ```typescript
 server.registerTool(
   datetimeTool.name,
@@ -1604,6 +1619,7 @@ git commit -m "feat: add datetime MCP tool with 9 operations"
 ## Task 7: Update skills and plugin metadata
 
 **Files:**
+
 - Create: `skills/math/DATETIME.md`
 - Modify: `skills/math/SKILL.md`
 - Modify: `hooks/session-start`
@@ -1616,72 +1632,86 @@ git commit -m "feat: add datetime MCP tool with 9 operations"
 
 ## Operations
 
-| Operation       | Required Fields               | Optional Fields          | Returns                                              |
-| --------------- | ----------------------------- | ------------------------ | ---------------------------------------------------- |
-| `difference`    | `from`, `to`                  | `unit`                   | Breakdown or single-unit difference                  |
-| `add`           | `date`, `amount`, `unit`      |                          | New ISO date                                         |
-| `subtract`      | `date`, `amount`, `unit`      |                          | New ISO date                                         |
-| `business_days` | `from`, `to`                  | `holidays`               | Count of weekdays (excluding weekends and holidays)  |
-| `days_in_month` | `year`, `month`               |                          | Number of days in that month                         |
-| `age`           | `birthDate`, `asOf`           |                          | Years, months, days breakdown                        |
-| `quarter`       | `date`                        |                          | Quarter number, start and end dates                  |
-| `day_of_week`   | `date`                        |                          | Day name and ISO day number (1=Mon through 7=Sun)    |
-| `is_leap_year`  | `year`                        |                          | Boolean                                              |
+| Operation       | Required Fields          | Optional Fields | Returns                                             |
+| --------------- | ------------------------ | --------------- | --------------------------------------------------- |
+| `difference`    | `from`, `to`             | `unit`          | Breakdown or single-unit difference                 |
+| `add`           | `date`, `amount`, `unit` |                 | New ISO date                                        |
+| `subtract`      | `date`, `amount`, `unit` |                 | New ISO date                                        |
+| `business_days` | `from`, `to`             | `holidays`      | Count of weekdays (excluding weekends and holidays) |
+| `days_in_month` | `year`, `month`          |                 | Number of days in that month                        |
+| `age`           | `birthDate`, `asOf`      |                 | Years, months, days breakdown                       |
+| `quarter`       | `date`                   |                 | Quarter number, start and end dates                 |
+| `day_of_week`   | `date`                   |                 | Day name and ISO day number (1=Mon through 7=Sun)   |
+| `is_leap_year`  | `year`                   |                 | Boolean                                             |
 
 ### Examples
 
 **Difference between two dates:**
 ```
+
 datetime({ operation: "difference", from: "2026-01-01", to: "2026-03-15" })
 → { result: "2m 14d", breakdown: { years: 0, months: 2, days: 14, ... } }
 
 datetime({ operation: "difference", from: "2026-01-01", to: "2026-03-15", unit: "days" })
 → { result: "73 days", difference: 73 }
+
 ```
 
 **Add/subtract time:**
 ```
+
 datetime({ operation: "add", date: "2026-01-01", amount: 90, unit: "days" })
 → { result: "2026-04-01" }
 
 datetime({ operation: "subtract", date: "2026-03-21", amount: 2, unit: "weeks" })
 → { result: "2026-03-07" }
+
 ```
 
 **Business days:**
 ```
+
 datetime({ operation: "business_days", from: "2026-01-01", to: "2026-01-31" })
 → { result: "22", businessDays: 22 }
 
 datetime({ operation: "business_days", from: "2026-01-01", to: "2026-01-31", holidays: ["2026-01-19"] })
 → { result: "21", businessDays: 21 }
+
 ```
 
 **Age:**
 ```
+
 datetime({ operation: "age", birthDate: "1990-06-15", asOf: "2026-03-21" })
 → { result: "35 years, 9 months, 6 days", years: 35, months: 9, days: 6 }
+
 ```
 
 **Quarter:**
 ```
+
 datetime({ operation: "quarter", date: "2026-10-15" })
 → { result: "Q4", quarter: 4, quarterStart: "2026-10-01", quarterEnd: "2026-12-31" }
+
 ```
 
 **Day of week:**
 ```
+
 datetime({ operation: "day_of_week", date: "2026-03-21" })
 → { result: "Saturday", dayOfWeek: "Saturday", dayNumber: 6 }
+
 ```
 
 **Days in month / Leap year:**
 ```
+
 datetime({ operation: "days_in_month", year: 2024, month: 2 })
 → { result: "29", days: 29 }
 
 datetime({ operation: "is_leap_year", year: 2024 })
 → { result: "true", isLeapYear: true }
+
 ```
 
 ## Date Format
@@ -1733,11 +1763,12 @@ Add a `datetime` section to the "Tool Quick Reference" at the bottom, before the
 ### datetime
 
 Takes `operation` (enum) and operation-specific fields.
-
 ```
+
 datetime({ operation: "difference", from: "2026-01-01", to: "2026-03-15", unit: "days" })
 datetime({ operation: "add", date: "2026-01-01", amount: 90, unit: "days" })
 datetime({ operation: "age", birthDate: "1990-06-15", asOf: "2026-03-21" })
+
 ```
 
 Operations: `difference`, `add`, `subtract`, `business_days`, `days_in_month`,
@@ -1747,6 +1778,7 @@ For details on each operation and date format, see [DATETIME.md](DATETIME.md).
 ```
 
 Also update the skill description in the frontmatter (line 4) to mention datetime:
+
 ```
   Guidance for using Euclid's deterministic MCP math tools (calculate, convert,
   statistics, datetime). Use when the user's request requires numerical computation,

@@ -1,12 +1,6 @@
 // src/error-hints/calculate.ts
 
-export const EXAMPLES = [
-  '2 * 3',
-  'sqrt(16)',
-  'sin(pi / 4)',
-  'log(100, 10)',
-  '12! / (4! * 8!)',
-];
+export const EXAMPLES = ['2 * 3', 'sqrt(16)', 'sin(pi / 4)', 'log(100, 10)', '12! / (4! * 8!)'];
 
 export function getHint(errorMessage: string): string {
   if (

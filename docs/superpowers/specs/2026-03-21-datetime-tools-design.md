@@ -17,6 +17,7 @@ Alongside the new tool, refactor `src/error-hints.ts` from a monolith to a regis
 **`date-fns`** — tree-shakeable date arithmetic library (~10-14 KB bundled, ~52M downloads/week, native TypeScript, ESM, zero transitive dependencies).
 
 Chosen over:
+
 - `dayjs` (~2 KB) — lacks built-in business day support
 - `luxon` — not tree-shakeable
 - `mathjs` — has no date/time functionality
@@ -35,23 +36,36 @@ Uses the same `operation` enum pattern as the existing `statistics` tool:
 
 ```typescript
 z.object({
-  operation: z.enum([
-    'difference', 'add', 'subtract', 'business_days',
-    'days_in_month', 'age', 'quarter', 'day_of_week', 'is_leap_year'
-  ]).describe('The datetime operation to perform'),
+  operation: z
+    .enum([
+      'difference',
+      'add',
+      'subtract',
+      'business_days',
+      'days_in_month',
+      'age',
+      'quarter',
+      'day_of_week',
+      'is_leap_year',
+    ])
+    .describe('The datetime operation to perform'),
   date: z.string().optional().describe('ISO 8601 date (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss)'),
   from: z.string().optional().describe('Start date (ISO 8601)'),
   to: z.string().optional().describe('End date (ISO 8601)'),
   amount: z.number().optional().describe('Number of units to add/subtract'),
-  unit: z.enum(['days', 'weeks', 'months', 'years', 'hours', 'minutes', 'seconds']).optional()
+  unit: z
+    .enum(['days', 'weeks', 'months', 'years', 'hours', 'minutes', 'seconds'])
+    .optional()
     .describe('Time unit for add/subtract/difference'),
   year: z.number().optional().describe('Year (for days_in_month, is_leap_year)'),
   month: z.number().optional().describe('Month 1-12 (for days_in_month)'),
   birthDate: z.string().optional().describe('Birth date (ISO 8601, for age)'),
   asOf: z.string().optional().describe('Reference date (ISO 8601, for age)'),
-  holidays: z.array(z.string()).optional()
+  holidays: z
+    .array(z.string())
+    .optional()
     .describe('ISO date strings to exclude as holidays (for business_days)'),
-})
+});
 ```
 
 Required fields per operation are validated in the handler/engine, not the schema (same pattern as `statistics` where `percentile` is optional at schema level but required for the percentile operation).
@@ -184,13 +198,13 @@ A new function in `src/normalization.ts`:
 
 ### Datetime Hints
 
-| Pattern | Hint |
-|---------|------|
-| Invalid date | "Date must be in ISO 8601 format: YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss" |
-| Invalid month | "Month must be between 1 and 12" |
-| Missing required fields | "Operation '<op>' requires fields: <list>. See tool description for details" |
-| Unparseable natural date | "Could not parse date. Use ISO format: 2026-03-21" |
-| Ambiguous numeric date | "Ambiguous date format. Use ISO format YYYY-MM-DD to avoid DD/MM vs MM/DD confusion" |
+| Pattern                  | Hint                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------ |
+| Invalid date             | "Date must be in ISO 8601 format: YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss"                 |
+| Invalid month            | "Month must be between 1 and 12"                                                     |
+| Missing required fields  | "Operation '<op>' requires fields: <list>. See tool description for details"         |
+| Unparseable natural date | "Could not parse date. Use ISO format: 2026-03-21"                                   |
+| Ambiguous numeric date   | "Ambiguous date format. Use ISO format YYYY-MM-DD to avoid DD/MM vs MM/DD confusion" |
 
 ## Skills
 
