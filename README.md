@@ -1,15 +1,15 @@
 # Euclid
 
-> _"What is asserted without proof can be dismissed without proof — but what is proved, endures."_
-> — In the spirit of Euclid of Alexandria
+> _"What is asserted without proof can be dismissed without proof, but what is proved, endures."_
+> In the spirit of Euclid of Alexandria
 
-Twenty-three centuries ago, Euclid of Alexandria looked at the mathematics of his time — a tangle of folklore, intuition, and "trust me" — and said: _no more_. He built geometry from the ground up on axioms and proofs. If something was true, you could _show_ it was true. No hand-waving. No guessing.
+Twenty-three centuries ago, Euclid of Alexandria looked at the mathematics of his time, a tangle of folklore, intuition, and "trust me", and said: _no more_. He built geometry from the ground up on axioms and proofs. If something was true, you could _show_ it was true. No hand-waving. No guessing.
 
-Large language models have the same problem Euclid's contemporaries did. They don't calculate — they _predict_. When you ask an LLM "what's 247 x 389?", it pattern-matches against its training data and guesses what the answer probably looks like. Sometimes right, sometimes wrong. You'd never know the difference.
+Large language models have the same problem Euclid's contemporaries did. They don't calculate. They _predict_. When you ask an LLM "what's 247 x 389?", it pattern-matches against its training data and guesses what the answer probably looks like. Sometimes right, sometimes wrong. You'd never know the difference.
 
 **Deterministic computation tools for AI agents.**
 
-Euclid is a hosted [MCP server](https://modelcontextprotocol.io) that gives any AI agent access to real, deterministic computation engines. What is self-evident should not be guessed — and arithmetic is about as self-evident as it gets.
+Euclid is a hosted [MCP server](https://modelcontextprotocol.io) that gives any AI agent access to real, deterministic computation engines. What is self-evident should not be guessed, and arithmetic is about as self-evident as it gets.
 
 ---
 
@@ -104,13 +104,13 @@ After connecting, ask your AI agent:
 
 > "What is 247 times 389?"
 
-If Euclid is working, the agent will call the `calculate` tool instead of predicting the answer. You'll see the tool call in the response. The correct answer is **96,083** — and unlike mental math, it's guaranteed.
+If Euclid is working, the agent will call the `calculate` tool instead of predicting the answer. You'll see the tool call in the response. The correct answer is **96,083**, and unlike mental math, it's guaranteed.
 
 ---
 
 ## Enforce Deterministic Computation
 
-Installing Euclid gives your AI access to a calculator. But access alone isn't enough — the AI needs to be **instructed** to reach for it. Without an explicit directive, models will still predict math from training data by default.
+Installing Euclid gives your AI access to a calculator. But access alone isn't enough: the AI needs to be **instructed** to reach for it. Without an explicit directive, models will still predict math from training data by default.
 
 Add the following to your project's AI instruction file. Pre-built versions are in the [`rules/`](rules/) directory:
 
@@ -121,7 +121,7 @@ Add the following to your project's AI instruction file. Pre-built versions are 
 | [`rules/.cursorrules`](rules/.cursorrules) | Cursor |
 | [`rules/.windsurfrules`](rules/.windsurfrules) | Windsurf |
 
-The content is identical — copy the one that matches your IDE into your project root (or append it to your existing instruction file).
+The content is identical. Copy the one that matches your IDE into your project root, or append it to your existing instruction file.
 
 <details>
 <summary>Preview the instruction block</summary>
@@ -130,23 +130,23 @@ The content is identical — copy the one that matches your IDE into your projec
 ## Deterministic Computation (Euclid)
 
 **NEVER predict, guess, or mentally compute numerical results.** LLMs produce answers by
-pattern-matching against training data — sometimes right, sometimes subtly wrong, and
+pattern-matching against training data, sometimes right, sometimes subtly wrong, and
 there is no way to tell which. Always use Euclid's MCP tools instead.
 
 | Tool         | When to Use                                                                                                                            |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `calculate`  | Arithmetic, percentages, margins, exponents, trig, logarithms, factorials — any expression with a numerical answer                    |
+| `calculate`  | Arithmetic, percentages, margins, exponents, trig, logarithms, factorials. Any expression with a numerical answer                     |
 | `convert`    | Unit conversions: m² to acres, km to miles, L/hr to gal/hr, °C to °F, bytes to kB, etc.                                               |
-| `statistics` | Mean, median, mode, std deviation, variance, percentile, min, max, sum — plus t-test, z-test, chi-squared, confidence intervals, correlation |
-| `datetime`   | Date differences, add/subtract time, business days, age, day of week, quarter, leap year — any calendar arithmetic                    |
+| `statistics` | Mean, median, mode, std deviation, variance, percentile, min, max, sum. Plus t-test, z-test, chi-squared, confidence intervals, correlation |
+| `datetime`   | Date differences, add/subtract time, business days, age, day of week, quarter, leap year. Any calendar arithmetic                     |
 | `encode`     | Base64, hex, URL, HTML encoding/decoding; SHA-256/512, SHA-1, MD5 hashing; HMAC signatures; JWT decoding                               |
-| `finance`    | Loan payments, amortization, present/future value, NPV, IRR, CAGR, margin/markup, compound interest — any financial formula            |
-| `regex`      | Pattern testing, text extraction, match-all, replace, split — execute patterns, never predict whether they match                       |
+| `finance`    | Loan payments, amortization, present/future value, NPV, IRR, CAGR, margin/markup, compound interest. Any financial formula             |
+| `regex`      | Pattern testing, text extraction, match-all, replace, split. Execute patterns, never predict whether they match                        |
 | `color`      | Color conversion (hex, RGB, HSL, etc.), contrast ratios, WCAG accessibility, lighten/darken, palette generation                        |
-| `validate`   | Email, URL, UUID, credit card (Luhn check), IPv4, IPv6, IBAN — structural validation with check digits                                 |
+| `validate`   | Email, URL, UUID, credit card (Luhn check), IPv4, IPv6, IBAN. Structural validation with check digits                                  |
 | `geo`        | Distances (Haversine/Vincenty), bearings, midpoints, destination points, polygon area, point-in-polygon, coordinate conversions        |
 
-This applies everywhere — not just code. Analytics, business metrics, growth rates,
+This applies everywhere, not just code. Analytics, business metrics, growth rates,
 marketing numbers, cost calculations, date arithmetic, financial projections during
 conversation. If there is a number to compute, a date to calculate, or data to
 encode, hash, or validate, use Euclid. No exceptions.
@@ -160,7 +160,7 @@ encode, hash, or validate, use Euclid. No exceptions.
 
 ## Tools
 
-Euclid exposes 10 purpose-built tools across computation, encoding, validation, and spatial domains.
+Euclid has 10 tools.
 
 ### `calculate`
 
@@ -191,7 +191,7 @@ Supports: length, mass, volume, temperature, area, speed, time, data, and [100+ 
 
 ### `statistics`
 
-Statistical calculations — both descriptive and inferential.
+Statistical calculations, both descriptive and inferential.
 
 ```
 statistics("mean", [23, 45, 12, 67, 34])          → 36.2
@@ -294,7 +294,7 @@ Distance, area, midpoint, bearing, destination point, point-in-polygon, coordina
 
 ## The Problem
 
-LLMs are non-deterministic. Every token they produce is a _prediction_ — including math:
+LLMs are non-deterministic. Every token they produce is a _prediction_, including math:
 
 - `247 × 389` → the model _predicts_ `96,083` (sometimes it gets `96,183` or `95,983`)
 - `sin(47.3°) × cos(12.1°)` → the model _predicts_ something close-ish
@@ -304,7 +304,7 @@ Sometimes the predictions are correct. Sometimes they're subtly wrong. The probl
 
 **Euclid makes this a non-issue.** When an AI agent has Euclid available, it sends expressions to a real computation engine and returns the computed result. Deterministic. Correct. Every time.
 
-Think of it like what `grep` did for AI code search — a simple, proven tool that gives the model a capability it fundamentally lacks.
+Think of it like what `grep` did for AI code search. A simple, proven tool that gives the model a capability it fundamentally lacks.
 
 ---
 
@@ -314,10 +314,10 @@ Many LLM environments have code execution tools (Python sandboxes, etc.) that ca
 
 |                     | Code Execution                     | Euclid                                     |
 | ------------------- | ---------------------------------- | ------------------------------------------ |
-| **Overhead**        | Spins up a sandbox/interpreter     | Near-zero — evaluates an expression string |
+| **Overhead**        | Spins up a sandbox/interpreter     | Near-zero: evaluates an expression string  |
 | **Latency**         | Hundreds of ms to seconds          | Single-digit ms                            |
 | **Availability**    | Varies by client                   | Any MCP client                             |
-| **Model behaviour** | Model writes _code_ that does math | Model writes a _math expression_           |
+| **Model behavior**  | Model writes _code_ that does math | Model writes a _math expression_           |
 | **Failure modes**   | Syntax errors, runtime exceptions  | Clear error with hint and examples         |
 | **Token cost**      | Code generation is verbose         | Expression strings are minimal             |
 
@@ -325,7 +325,7 @@ Many LLM environments have code execution tools (Python sandboxes, etc.) that ca
 
 ## Pricing
 
-Every account starts with **1,000 free tool calls** — no credit card required.
+Every account starts with **1,000 free tool calls**. No credit card required.
 
 After that, top up credits at [app.euclidtools.com](https://app.euclidtools.com).
 
@@ -333,7 +333,7 @@ After that, top up credits at [app.euclidtools.com](https://app.euclidtools.com)
 
 ## Philosophy
 
-LLMs are incredibly powerful, but they have a fundamental limitation: everything they produce is a prediction. For creative writing, reasoning, and conversation, that's a feature. For math, it's a bug.
+Everything an LLM produces is a prediction. For creative writing and reasoning, that's fine. For math, it's a problem.
 
 The solution isn't to make models better at predicting math. It's to give them a calculator.
 
@@ -343,13 +343,13 @@ This is part of a broader principle: **wherever a model does something predictiv
 
 ## License
 
-The Euclid MCP server is proprietary software. This repository contains connection instructions, skills, and documentation — all provided for integration purposes.
+The Euclid MCP server is proprietary software. This repository contains connection instructions, skills, and documentation for integration purposes.
 
 All rights reserved. See [LICENSE](LICENSE) for details.
 
 ---
 
 <p align="center">
-  <i>Euclid of Alexandria formalised mathematical proof 2,300 years ago.<br>
+  <i>Euclid of Alexandria formalized mathematical proof 2,300 years ago.<br>
   We're just giving his tools to the machines.</i>
 </p>
