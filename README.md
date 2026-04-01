@@ -164,7 +164,7 @@ Euclid has 10 tools.
 
 ### `calculate`
 
-Evaluates mathematical expressions deterministically via [mathjs](https://mathjs.org).
+Evaluates mathematical expressions deterministically.
 
 ```
 calculate("(245 * 389) + (12^3 / 7)")  → 95,551.857...
@@ -187,7 +187,7 @@ convert(1024, "bytes", "kB")           → 1.024
 convert(60, "mph", "km/h")             → 96.561
 ```
 
-Supports: length, mass, volume, temperature, area, speed, time, data, and [100+ units](https://mathjs.org/docs/datatypes/units.html). Natural language aliases (e.g. "celsius", "miles per hour") are normalized automatically.
+Supports: length, mass, volume, temperature, area, speed, time, data, and 100+ units. Natural language aliases (e.g. "celsius", "miles per hour") are normalized automatically.
 
 ### `statistics`
 
@@ -231,7 +231,7 @@ encode("jwt_decode", { input: "eyJhbGci..." })                  → { header, pa
 
 ### `finance`
 
-Financial calculations using arbitrary-precision decimal arithmetic via [decimal.js](https://github.com/MikeMcl/decimal.js).
+Financial calculations using arbitrary-precision decimal arithmetic.
 
 ```
 finance("loan_payment", { principal: 350000, rate: 6.5, periods: 360 })   → $2,212.24/mo
@@ -243,7 +243,7 @@ finance("compound_growth", { start_value: 2.1M, end_value: 4.8M, periods: 4 }) �
 
 ### `color`
 
-Color conversion, accessibility checks, and palette generation via [culori](https://culorijs.org).
+Color conversion, accessibility checks, and palette generation.
 
 ```
 color("convert", { color: "#FF6B35", to_space: "hsl" })
@@ -256,7 +256,7 @@ color("analogous", { color: "#2563EB", count: 5 })
 
 ### `regex`
 
-Safe regex execution via [RE2](https://github.com/nicolo-ribaudo/re2-wasm) (guaranteed linear-time, no ReDoS).
+Safe regex execution (guaranteed linear-time, no ReDoS).
 
 ```
 regex("test", { pattern: "^\\d{3}-\\d{4}$", subject: "555-1234" })     → true
@@ -280,7 +280,7 @@ Formats: email, url, uuid, credit_card (Luhn), ipv4, ipv6, iban.
 
 ### `geo`
 
-Geospatial calculations via [turf.js](https://turfjs.org) and [geodesy](https://github.com/chrisveness/geodesy).
+Geospatial calculations.
 
 ```
 geo("distance", { from: [lat, lon], to: [lat, lon] })        → km (Haversine or Vincenty)
