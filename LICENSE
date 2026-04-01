@@ -1,0 +1,16 @@
+Copyright (c) 2025-present Euclid Tools. All rights reserved.
+
+The Euclid MCP server is proprietary software. This repository contains
+connection instructions, skills, and documentation provided for the sole
+purpose of integrating with the Euclid hosted service.
+
+You may:
+- Clone or fork this repository to configure your own MCP client
+- Copy the rules/ files into your project's AI instruction files
+- Use the Claude Code plugin (claude plugin install euclidtools/euclid)
+
+You may not:
+- Use the contents of this repository to build a competing service
+- Redistribute modified versions of the skills as your own product
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
