@@ -1,0 +1,15 @@
+{
+  "name": "euclid",
+  "displayName": "Euclid",
+  "description": "Deterministic computation tools for AI agents. 10 MCP tools (calculate, convert, statistics, datetime, encode, finance, regex, validate, color, geo) that replace mental math with real computation",
+  "version": "1.0.0",
+  "author": {
+    "name": "Euclid Tools"
+  },
+  "homepage": "https://euclidtools.com",
+  "repository": "https://github.com/euclidtools/euclid",
+  "license": "SEE LICENSE",
+  "keywords": ["math", "calculator", "mcp", "deterministic", "computation", "tools"],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json"
+}
